@@ -45,6 +45,16 @@ library(ggrepel)
 # write.csv(metadata3,"/Users/shansun/Google\ Drive/mc_set1/test/metadata_combined.csv")
 # write.csv(taxa_tab3,"/Users/shansun/Google\ Drive/mc_set1/test/taxa_combined.csv")
 
+outDir = file.path(dirname(getwd()), "output")
+message("Output directory: ", outDir)
+outDirs = c(file.path(outDir, "Figure1"),
+            file.path(outDir, "Figure2"),
+            file.path(outDir, "Figure3"),
+            file.path(outDir, "Tables"))
+for (dir in outDirs){
+  if(!dir.exists(dir)) dir.create(dir, recursive = TRUE, showWarnings = FALSE)
+}
+
 metadata_dir="../metadata/metadata_short.csv"
 taxa_dir="../data/taxa_combined.csv"
 
@@ -54,18 +64,18 @@ metadata1=meta_format(metadata=metadata_dir,metadata_sep=",",meta_sample_name_co
 #Fig.1
 #PCoA plot and alpha diversity
 tab_s=table_subset(taxa_table = taxa_tab1,metadata=metadata1,stratify_by_metadata="location",stratify_by_value="ASC",prevalence_cutoff=0, abundance_cutoff=0)
-pdf("../output/pcoa_asc.pdf",height=18,width=6,onefile=T)
+pdf("../output/Figure1/pcoa_asc.pdf",height=18,width=6,onefile=T)
 mds_plot(taxa_table = tab_s, metadata=metadata1,test_metadata="Case_Ctrl",method_mds = "pcoa",palette_group=c("red","blue","orange","green"),distance_type="bray")
 dev.off()
-pdf("../output/alpha_asc.pdf",height=30,width=10,onefile=T)
+pdf("../output/Figure1/alpha_asc.pdf",height=30,width=10,onefile=T)
 alpha_plot(taxa_table = tab_s, metadata=metadata1,test_metadata="Case_Ctrl",palette_group=c("red","blue","orange","green"))
 dev.off()
 
 tab_s=table_subset(taxa_table = taxa_tab1,metadata=metadata1,stratify_by_metadata="location",stratify_by_value="DES",prevalence_cutoff=0, abundance_cutoff=0)
-pdf("../output/pcoa_des.pdf",height=18,width=6,onefile=T)
+pdf("../output/Figure1/pcoa_des.pdf",height=18,width=6,onefile=T)
 mds_plot(taxa_table = tab_s, metadata=metadata1,test_metadata="Case_Ctrl",method_mds = "pcoa",palette_group=c("red","blue","orange","green"),distance_type="bray")
 dev.off()
-pdf("../output/alpha_des.pdf",height=30,width=10,onefile=T)
+pdf("../output/Figure1/alpha_des.pdf",height=30,width=10,onefile=T)
 alpha_plot(taxa_table = tab_s, metadata=metadata1,test_metadata="Case_Ctrl",palette_group=c("red","blue","orange","green"))
 dev.off()
 
@@ -108,7 +118,7 @@ mds_vals=cbind(tVals,pVals)
 rownames(mds_vals)=c("model1","model2","model3","model4")
 colnames(mds_vals)=paste(c("alpha_ASC","MDS1_ASC","MDS2_ASC","MDS3_ASC","MDS4_ASC","MDS5_ASC","MDS6_ASC"),
                          c(rep("t",7),rep("P",7)),sep="_")
-write.csv(mds_vals,file="../output/mds_models_asc.csv")
+write.csv(mds_vals,file="../output/Figure1/mds_models_asc.csv")
 
 #DES
 tab_s=table_subset(taxa_table = taxa_tab1,metadata=metadata1,stratify_by_metadata="location",stratify_by_value="DES",prevalence_cutoff=0, abundance_cutoff=0)
@@ -148,7 +158,7 @@ mds_vals=cbind(tVals,pVals)
 rownames(mds_vals)=c("model1","model2","model3","model4")
 colnames(mds_vals)=paste(c("alpha_DES","MDS1_DES","MDS2_DES","MDS3_DES","MDS4_DES","MDS5_DES","MDS6_DES"),
                          c(rep("t",7),rep("P",7)),sep="_")
-write.csv(mds_vals,file="../output/mds_models_des.csv")
+write.csv(mds_vals,file="../output/Figure1/mds_models_des.csv")
 
 
 #Fig. 2
@@ -232,22 +242,22 @@ length(which(fdrs[,4]<0.1 & tVals[,4]<0))
 length(which(fdrs[,4]<0.1 & tVals[,4]>0))
 
 
-write.csv(pVals,file="../output/lmer_P_cov_all_model.csv")
-write.csv(fdrs,file="../output/lmer_FDR_cov_all_model.csv")
+write.csv(pVals,file="../output/Tables/lmer_P_cov_all_model.csv")
+write.csv(fdrs,file="../output/Tables/lmer_FDR_cov_all_model.csv")
 
 r_all=cbind(tVals,pVals,fdrs)
 colnames(r_all)=paste(colnames(r_all),c(rep("t",8),rep("P",8),rep("FDR",8)),sep="_")
 r_all=r_all[order(r_all[,2]),]
-write.csv(r_all,file="../output/lmer_all_models_results.csv")
+write.csv(r_all,file="../output/Tables/lmer_all_models_results.csv")
 
 r_all_sig=r_all[which(apply(r_all[,17:24],1,min)<0.1),]
-write.csv(r_all_sig,file="../output/lmer_all_models_sig_results.csv")
+write.csv(r_all_sig,file="../output/Tables/lmer_all_models_sig_results.csv")
 
 
 
 
 #Fig.2
-pdf("../output/tree_model.pdf",height =5, width=10,onefile=T)
+pdf("../output/Figure2/tree_model.pdf",height =5, width=10,onefile=T)
 for (i in 1:4){
   #only DES trees because there is no significant ones in ASC
   fdrs1=cbind(tVals[,i*2],pVals[,i*2],fdrs[,i*2])
@@ -265,7 +275,7 @@ dev.off()
 
 
 #Fig.3
-pdf("../output/corplot_model.pdf",height =10, width=10,onefile=T)
+pdf("../output/Figure3/corplot_model.pdf",height =10, width=10,onefile=T)
 pVals_log=data.frame(log10(fdrs)*sign(tVals))
 cor1=matrix(nrow=4,ncol=2)
 for (i in 1:4){
@@ -284,4 +294,4 @@ for (i in 1:4){
 dev.off()
 colnames(cor1)=c("rho","P")
 rownames(cor1)=c("model1","model2","model3","model4")
-write.csv(cor1,file="../output/corplot_model.csv")
+write.csv(cor1,file="../output/Figure3/corplot_model.csv")

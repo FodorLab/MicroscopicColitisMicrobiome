@@ -8,43 +8,6 @@ library(ggplot2)
 library(ggpubr)
 library(ggrepel)
 
-# metadata_dir="/Users/shansun/Google\ Drive/mc_set1/metadata_parsed.csv"
-# taxa_dir1="/Users/shansun/Google\ Drive/mc_set1/set1/biom-with-taxonomy.biom"
-# taxa_dir2="/Users/shansun/Google\ Drive/mc_set1/set2/dada2/biom-with-taxonomy.biom"
-# 
-# #format the raw taxonomic abudance table
-# taxa_tab1=format_asv(taxa_file = taxa_dir1,biom=T,onefile = T,ASV=T)
-# taxa_tab2=format_asv(taxa_file = taxa_dir2,biom=T,onefile = T,ASV=T)
-# colnames(taxa_tab1)=gsub("\\.","",colnames(taxa_tab1))
-# colnames(taxa_tab1)=paste(substr(colnames(taxa_tab1),1,6),substr(colnames(taxa_tab1),7,9),sep="_")
-# 
-# intersect(colnames(taxa_tab1),colnames(taxa_tab2))
-# #overlap "M14912_DES"
-# taxa_tab2=taxa_tab2[,!grepl("M14912_DES",colnames(taxa_tab2))]
-# 
-# taxa_tab3=merge(taxa_tab1,taxa_tab2,by=0,all=T)
-# rownames(taxa_tab3)=taxa_tab3[,1]
-# taxa_tab3=taxa_tab3[,-1]
-# taxa_tab3[is.na(taxa_tab3)]=0
-# taxa_tab3=t(t(taxa_tab3)/colSums(taxa_tab3))*mean(colSums(taxa_tab3))
-# 
-# #format metadata
-# metadata1=meta_format(metadata=metadata_dir,metadata_sep=",",meta_sample_name_col=1)
-# metadata2=metadata1
-# 
-# metadata1$location="ASC"
-# rownames(metadata1)=paste(rownames(metadata1),"ASC",sep="_")
-# metadata2$location="DES"
-# rownames(metadata2)=paste(rownames(metadata2),"DES",sep="_")
-# metadata3=rbind(metadata1,metadata2)
-# 
-# metadata3$batch=rep(NA,nrow(metadata3))
-# metadata3$batch[which(rownames(metadata3)%in%colnames(taxa_tab1))]=1
-# metadata3$batch[which(rownames(metadata3)%in%colnames(taxa_tab2))]=2
-
-# write.csv(metadata3,"/Users/shansun/Google\ Drive/mc_set1/test/metadata_combined.csv")
-# write.csv(taxa_tab3,"/Users/shansun/Google\ Drive/mc_set1/test/taxa_combined.csv")
-
 outDir = file.path(dirname(getwd()), "output")
 message("Output directory: ", outDir)
 outDirs = c(file.path(outDir, "Figure1"),
